@@ -1,0 +1,35 @@
+apply plugin: 'eclipse'
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'distribution'
+
+repositories {
+	mavenCentral();
+}
+
+dependencies {
+    compile group:'javax.websocket', name:'javax.websocket-api', version:'1.1'
+    compile group:'javax.enterprise.concurrent', name:'javax.enterprise.concurrent-api', version:'1.0'
+    compile group:'javax.json', name:'javax.json-api', version:'1.0'
+}
+
+CopySpec usrDirSpec() {
+	return copySpec {
+		into("servers/websocketSample") {
+			from(war) {
+				into 'apps'
+			}
+			from 'src/main/wlp/server.xml'
+		}
+	}
+}
+
+distributions {
+    main {
+        baseName = 'websocketSample'
+        contents {
+            into '/usr'
+            with usrDirSpec()
+        }
+    }
+}
