@@ -1,0 +1,43 @@
+apply plugin: 'eclipse'
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'distribution'
+
+// Dependencies
+repositories { mavenCentral(); }
+
+dependencies {
+    compile group:'javax.websocket', name:'javax.websocket-api', version:'1.1'
+    compile group:'javax.enterprise.concurrent', name:'javax.enterprise.concurrent-api', version:'1.0'
+    compile group:'javax.json', name:'javax.json-api', version:'1.0'
+}
+
+// Set the Eclipse facets to use 3.1 of the Dynamic Web Module (there doesn't appear to be a specific web socket facet)
+eclipse {
+    wtp {
+        facet {
+            facet name: 'java', version: '1.7'
+            facet name: 'jst.web', version: '3.1'
+        }
+    }
+}
+
+// Create a distribution that creates a usr dir with the sample in
+CopySpec usrDirSpec() {
+    return copySpec {
+        into("servers/websocketSample") {
+            from(war) { into 'apps' }
+            from 'src/main/wlp/server.xml'
+        }
+    }
+}
+
+distributions {
+    main {
+        baseName = 'websocketSample'
+        contents {
+            into '/usr'
+            with usrDirSpec()
+        }
+    }
+}
