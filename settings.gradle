@@ -1,0 +1,6 @@
+rootProject.name = 'async-websocket'
+include ':async-websocket-application'
+include ':async-websocket-wlpcfg'
+
+project(':async-websocket-application').projectDir = "$rootDir/async-websocket-application" as File
+project(':async-websocket-wlpcfg').projectDir = "$rootDir/async-websocket-wlpcfg" as File
