@@ -1,8 +1,69 @@
+apply plugin: 'liberty'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+group = 'net.wasdev.wlp.sample'
+version = '1.0-SNAPSHOT'
 
 description = 'WAS Liberty Sample - WebSocket Sample Server Configuration'
+
+ext {
+    // Liberty server properties
+    wlpServerName = 'websocketSample'
+    testServerHttpPort = 9082
+    testServerHttpsPort = 9445
+    appLocation = "async-websocket-application.war"
+
+    warContext = 'websocket'
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            name = 'Sonatype Nexus Snapshots'
+            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.wasdev.wlp.gradle.plugins:liberty-gradle-plugin:2.0-SNAPSHOT'
+    }
+}
+
 dependencies {
   compile project(':async-websocket-application')
     testCompile group: 'javax', name: 'javaee-api', version:'7.0'
     testCompile group: 'junit', name: 'junit', version:'4.12'
     testCompile group: 'org.eclipse.jetty.websocket', name: 'javax-websocket-client-impl', version:'9.2.13.v20150730'
+    libertyRuntime group: 'com.ibm.websphere.appserver.runtime', name: 'wlp-javaee7', version: '17.0.0.2'
 }
+
+liberty {
+    server {
+        name = wlpServerName
+        configFile = file("servers/${wlpServerName}/server.xml")
+        bootstrapProperties = ['default.http.port': testServerHttpPort, 
+                               'default.https.port': testServerHttpsPort, 
+                               'appLocation': appLocation, 
+                               'appContext': warContext]
+        apps = [new File("async-websocket-application/build/libs/async-websocket-application.war")]
+
+        features {
+            name = ['concurrent-1.0', 'localConnector-1.0', 'cdi-1.2', 'websocket-1.1', 'jsonp-1.0']
+            acceptLicense = true
+        }
+    }
+}
+
+task hello {
+    doLast {
+        println (new File(appLocation).toPath())
+    }
+}
+
+installApps.dependsOn ':async-websocket-application:war'
