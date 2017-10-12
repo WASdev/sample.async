@@ -60,10 +60,14 @@ liberty {
     }
 }
 
-task hello {
-    doLast {
-        println (new File(appLocation).toPath())
+gradle.taskGraph.whenReady { graph ->
+    if (graph.hasTask(":" + project.name + ":libertyStart") && !graph.hasTask(":" + project.name + ":libertyStop")) {
+        libertyStart.doLast {
+            println ("Server should be running on: http://localhost:${testServerHttpPort}/${warContext}")
+        }
     }
 }
 
+test.dependsOn 'libertyStart'
+test.finalizedBy 'libertyStop'
 installApps.dependsOn ':async-websocket-application:war'
