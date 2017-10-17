@@ -1,6 +1,4 @@
 allprojects  {
-    apply plugin: 'maven'
-
     group = 'net.wasdev.wlp.sample'
     version = '1.0-SNAPSHOT'
 }
