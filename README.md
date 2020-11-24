@@ -1,5 +1,8 @@
 # Java EE7: WebSockets [![Build Status](https://travis-ci.org/WASdev/sample.async.websockets.svg?branch=master)](https://travis-ci.org/WASdev/sample.async.websockets)
 
+**This repository is no longer being maintained and has been archived. It is left for reference and available for use as-is with the advisory that it depends old dependencies which may have security vulnerabilties.**
+
+
 The [WebSockets standard](#more-on-websockets) defines a full-duplex communication protocol to simplify and streamline long-running communications between a client and a server. The protocol has a well-defined wire format that allows for text or binary messages to be interleaved at will: either side of the connection can send messages at any time, in any order (which is a significant difference from the requirements of Comet or other long-polling mechanisms which require management of several connections to emulate bidirectional communication). The wire format is compact and efficient, making it ideal for small messages.
 
 A WebSocket connection is established by upgrading an existing HTTP connection via an Upgrade handshake. The connection continues to use the original HTTP connection after upgrade, which allows it to work with firewalls and other infrastructure optimized for HTTP traffic; however, HTTP [proxy servers may need to be upgraded to understand the WebSocket protocol](https://en.wikipedia.org/wiki/WebSocket#Proxy_traversal), especially those that do SSL termination.
